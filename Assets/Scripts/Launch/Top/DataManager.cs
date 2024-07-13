@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.PackageManager;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public struct FlightData
@@ -11,6 +12,13 @@ public struct FlightData
     public List<float> zenith; // 天頂角 (= 90 - 仰角)
     public List<float> azimuth; // 方位角 (東が0)
 };
+public struct RocketStatus
+{
+    public Vector3 coord;
+    public float vel;
+    public float zenith;
+    public float azimuth;
+}
 public struct Event
 {
     public float time;  // 時刻
@@ -56,7 +64,10 @@ public class DataManager : MonoBehaviour
     public List<Event> events = new List<Event> ();
     public Profile profile = new Profile();
     public RocketStructure rocket = new RocketStructure();
+
+
     private static DataManager instance;
+
     
     public static DataManager Instance
     {
@@ -73,6 +84,7 @@ public class DataManager : MonoBehaviour
         return instance;
         }
     }
+
 
     //シーン間でもインスタンスのオブジェクトが1つになるようにする
     void Awake()

@@ -14,11 +14,10 @@ public class Launcher : MonoBehaviour
         touchdown,
     }
 
-    [SerializeField] private GameObject camera = null;
-    [SerializeField] private GameObject rocket = null;
-    [SerializeField] private GameObject lines = null;
-    [SerializeField] private GameObject timer = null;
-    [SerializeField] private GameObject altitude = null;
+    [SerializeField] private GameObject[]  syncronizedObjects = new GameObject[0];
+
+
+    private List<SynchronizeData> synchronizeDataRefs;
 
     private float _Time = 0;
     public float time
@@ -27,6 +26,7 @@ public class Launcher : MonoBehaviour
         get { return _Time; }
     }
     private float timeMax = 0;
+    private float timeApogee = 0;
 
     public float timeRate = 1f; // ${timeRate}î{ë¨
 
@@ -42,15 +42,21 @@ public class Launcher : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (rocket == null || rocket.GetComponent<Rocket>() == null) return;
         timeMax = (DataManager.Instance.trajectory.time.Count > 0) ?
             DataManager.Instance.trajectory.time.Last() : 0;
+        var idx = DataManager.Instance.events.FindIndex(e => e.name == "apogee");
+        timeApogee = (idx > 0) ? DataManager.Instance.events[idx].time : timeMax;
+        synchronizeDataRefs = new List<SynchronizeData>();
+        for (int i = 0; i < syncronizedObjects.Length; i++)
+            if (syncronizedObjects[i] != null)
+                synchronizeDataRefs.Add(syncronizedObjects[i].GetComponent<SynchronizeData>());
+        this.launchState = LaunchState.prepare;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (rocket == null || rocket.GetComponent<Rocket>() == null) return;
+        if (syncronizedObjects.Length == 0) return;
 
         // ë≈Çøè„Ç∞íÜ
         switch(_LaunchState)
@@ -61,7 +67,7 @@ public class Launcher : MonoBehaviour
                     launchState = LaunchState.launch;
                 break;
             case LaunchState.launch:
-                time += Time.deltaTime * (time < 0 ? 1 : timeRate);
+                time += Time.deltaTime * (time < 0 || time > timeApogee + 1 ? 1 : timeRate); // ë≈Çøè„Ç∞Ç©ÇÁí∏ì_1ïbå„Ç‹Ç≈ÇÕÇ‰Ç¡Ç≠ÇË
                 if (time > timeMax)
                     launchState = LaunchState.touchdown;
                 if (Input.GetKeyDown(KeyCode.Space)) 
@@ -79,10 +85,11 @@ public class Launcher : MonoBehaviour
                 break;
         }
 
-        camera.GetComponent<LookAt>().SetTime(time);
-        rocket.GetComponent<RocketController>().SetTime(time);
-        lines.GetComponent<TrajectoryDrawer>().SetTime(time);
-        timer.GetComponent<Timer>().SetTime(time);
-        altitude.GetComponent<AltitudeDiplay>().SetTime(time);
+        
+        if (SynchronizeData.SetTime(time))
+        {
+            Debug.Log("called ");
+            foreach (var compRef in synchronizeDataRefs) compRef.Reflesh();
+        }
     }
 }

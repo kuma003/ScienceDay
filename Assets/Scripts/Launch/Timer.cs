@@ -3,22 +3,13 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class Timer : MonoBehaviour
+public class Timer : SynchronizeData
 {
-    private float _time;
 
-    private void Start()
+    public override void Reflesh()
     {
-        SetTime(-5);
-    }
-
-    public void SetTime(float time)
-    {
-        if (_time == time) return;
-        _time = time;
-
-        bool signed = (time > 0);
-        time = Mathf.Abs(time);
+        bool signed = (_time > 0);
+        var time = Mathf.Abs(_time);
 
         int min = Mathf.Min(Mathf.FloorToInt(time) / 60, 99); // 分
 
@@ -27,15 +18,4 @@ public class Timer : MonoBehaviour
         gameObject.GetComponent<RubyTextMeshProUGUI>().uneditedText = ($"X {(signed ? "＋" : "－")} {min:00}:{sec:00.00}");
     }
 
-#if UNITY_EDITOR
-
-    // インスペクターから更新されたら、マテリアルを更新する
-    private void OnValidate()
-    {
-        if (!UnityEditor.EditorApplication.isPlaying) return;
-
-        SetTime(_time);
-    }
-
-#endif
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // DashedLineÇÃÉâÉbÉp
-public class TrajectoryDrawer : MonoBehaviour
+public class TrajectoryDrawer : SynchronizeData
 {
     // ãOê’
     [SerializeField] GameObject TraceLine;
@@ -19,7 +19,6 @@ public class TrajectoryDrawer : MonoBehaviour
 
     [SerializeField] private float _lineWidth = 1f;
 
-    private float time;
 
     private void Start()
     {
@@ -32,13 +31,10 @@ public class TrajectoryDrawer : MonoBehaviour
         DashedLine.GetComponent<DashedLine>()._lineWidth = _lineWidth;
     }
 
-    public void SetTime(float time)
+    public override void Reflesh()
     {
-        if (this.time == time) return;
-        this.time = time; 
-        TraceLine.GetComponent<DashedLine>().timeRange = new TimeRange { start = 0, end = time };
-        DashedLine.GetComponent<DashedLine>().timeRange = new TimeRange { start = time, end = float.MaxValue };
-        Debug.Log(time);
+        TraceLine.GetComponent<DashedLine>().timeRange = new TimeRange { start = 0, end = _time };
+        DashedLine.GetComponent<DashedLine>().timeRange = new TimeRange { start = _time, end = float.MaxValue };
     }
 
 /*#if UNITY_EDITOR

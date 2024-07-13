@@ -107,7 +107,6 @@ public class Rocket : MonoBehaviour
             } // ’¸“_ƒŠƒXƒg
 
         }
-        Debug.Log(vertList.Count());
 
 
         mesh.SetVertices(vertList);
