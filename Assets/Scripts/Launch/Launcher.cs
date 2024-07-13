@@ -17,6 +17,8 @@ public class Launcher : MonoBehaviour
     [SerializeField] private GameObject camera = null;
     [SerializeField] private GameObject rocket = null;
     [SerializeField] private GameObject lines = null;
+    [SerializeField] private GameObject timer = null;
+    [SerializeField] private GameObject altitude = null;
 
     private float _Time = 0;
     public float time
@@ -59,7 +61,7 @@ public class Launcher : MonoBehaviour
                     launchState = LaunchState.launch;
                 break;
             case LaunchState.launch:
-                time += timeRate * Time.deltaTime;
+                time += Time.deltaTime * (time < 0 ? 1 : timeRate);
                 if (time > timeMax)
                     launchState = LaunchState.touchdown;
                 if (Input.GetKeyDown(KeyCode.Space)) 
@@ -80,6 +82,7 @@ public class Launcher : MonoBehaviour
         camera.GetComponent<LookAt>().SetTime(time);
         rocket.GetComponent<RocketController>().SetTime(time);
         lines.GetComponent<TrajectoryDrawer>().SetTime(time);
-
+        timer.GetComponent<Timer>().SetTime(time);
+        altitude.GetComponent<AltitudeDiplay>().SetTime(time);
     }
 }
