@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro.EditorUtilities;
 using UnityEngine;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 public class LookAt : SynchronizeData
 {
