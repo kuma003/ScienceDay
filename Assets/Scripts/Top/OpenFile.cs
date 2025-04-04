@@ -17,6 +17,8 @@ using System.Net.Sockets;
 public class OpenFile : MonoBehaviour
 {
     [SerializeField] GameObject _RocektObj;
+    [SerializeField] GameObject _ErrorPopup;
+
 
     // ボタンが押された場合
     public void onClick() {
@@ -35,14 +37,15 @@ public class OpenFile : MonoBehaviour
 #if UNITY_EDITOR
         // コピー先の一時フォルダ
         var dest_path = FileUtil.GetUniqueTempPathInProject();
+        if (Directory.Exists(dest_path)) Directory.Delete(dest_path, true);
         Directory.CreateDirectory(dest_path);
-
         // zipファイルに拡張子変更・伸張
         FileUtil.CopyFileOrDirectory(path[0], dest_path + "/rocket.zip");
         System.IO.Compression.ZipFile.ExtractToDirectory(dest_path + "/rocket.zip", dest_path);
 #else
-
         var dest_path = System.Environment.CurrentDirectory + "/temp";
+        if (Directory.Exists(dest_path)) Directory.Delete(dest_path, true);
+        Directory.Delete(dest_path, true);
         Directory.CreateDirectory(dest_path);
         Debug.Log(dest_path);
 
@@ -54,7 +57,6 @@ public class OpenFile : MonoBehaviour
         // xmlファイル読み込み
         XDocument xml = XDocument.Load(dest_path + "/rocket.ork");
 
-
         // xmlファイル解析・データ取得
         ReadXmlData(xml);
 
@@ -64,7 +66,6 @@ public class OpenFile : MonoBehaviour
 
     private void ReadXmlData(XDocument xmlOrkData)
     {
-        try {
             // イニシャライズ
             DataManager.Instance.trajectory = new FlightData() { time = new List<float>(), coord = new List<Vector3>(), vel = new List<float>(), zenith = new List<float>(), azimuth = new List<float>() };
             DataManager.Instance.events = new List<Event>();
@@ -201,8 +202,6 @@ public class OpenFile : MonoBehaviour
                     }
                 }
 
-                Debug.Log(finPoints.Count());
-
                 if (finPoints.Count() < 3) return; // finがないなら終了
 
                 var _rootChord = Vector3.Distance(finPoints[0], finPoints.Last()); // フィン翼根長
@@ -224,7 +223,7 @@ public class OpenFile : MonoBehaviour
                     default: // middleも
                         axialOffset = -axialOffset; break;
                 }
-                Debug.Log(axialOffset);
+                
                 // 機軸法線方向に半径分だけオフセット
                 Vector3 finOffset = new Vector3(DataManager.Instance.rocket.bodyDiameter / 2.0f, axialOffset, 0);
                 for (int i = 0; i < finPoints.Count(); i++) finPoints[i] += finOffset;
@@ -235,11 +234,7 @@ public class OpenFile : MonoBehaviour
 
                 DataManager.Instance.rocket.finPoints = finPoints.ToArray();
             }
-        }
-        catch
-        {
-            return;
-        }
+        
         }
 
     // 楕円形フィンの頂点を計算する関数.

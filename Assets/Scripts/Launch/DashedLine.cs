@@ -27,6 +27,9 @@ public class DashedLine : MonoBehaviour
     // 破線用のマテリアル
     [SerializeField] private Material dashedMaterial;
 
+    // 位置のオフセット
+    [SerializeField] public Vector3 startPoint = Vector3.zero;
+
     private TimeRange _timeRange = new TimeRange() { start = 0, end = 10 };
 
     // 線を表示する先頭の時刻
@@ -55,10 +58,14 @@ public class DashedLine : MonoBehaviour
         lineRenderer.startWidth = _lineWidth;
         lineRenderer.endWidth = _lineWidth;
 
-        Vector3[] Path = CalcPathFromTimeRange();
+        Vector3[] path = CalcPathFromTimeRange();
 
-        lineRenderer.positionCount = Path.Length; // 個数を指定
-        lineRenderer.SetPositions(Path); // 座標をセット.
+        for (int i = 0; i < path.Length; i++) {
+            path[i] += startPoint;
+        }
+
+        lineRenderer.positionCount = path.Length; // 個数を指定
+        lineRenderer.SetPositions(path); // 座標をセット.
 
         // 全体の長さを計算
         var totalLength = CalculateLength();

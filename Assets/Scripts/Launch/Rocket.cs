@@ -71,7 +71,7 @@ public class Rocket : MonoBehaviour
 
         // ノーズのモデルは高さ 1 [m], 底面直径 1 [m]. 原点は底面中心.
         nose.transform.localScale = new Vector3(rocket.bodyDiameter, rocket.noseLength, rocket.bodyDiameter);
-        nosePosition = new Vector3(0, rocket.bodyLength/2.0f, 0); // ボディ分だけオフセット. ポジションはRorateComponent内部で指定する.
+        nosePosition = new Vector3(0, rocket.bodyLength/2.0f, 0); // ボディ分だけオフセット. ポジションはRotateComponent内部で指定する.
         nose.transform.SetParent(gameObject.transform);
 
         // ボディ (円柱) は高さが 2 [m], 直径 1 [m]. オブジェクト原点をローカル原点に揃える.

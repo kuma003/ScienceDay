@@ -19,16 +19,21 @@ public class TrajectoryDrawer : SynchronizeData
 
     [SerializeField] private float _lineWidth = 1f;
 
+    [SerializeField] public Vector3 offset = Vector3.zero;
+
 
     private void Start()
     {
         TraceLine.GetComponent<DashedLine>()._length = _length;
         TraceLine.GetComponent<DashedLine>()._space = 0;
         TraceLine.GetComponent<DashedLine>()._lineWidth = _lineWidth;
+        TraceLine.GetComponent<DashedLine>().startPoint = offset;
+
 
         DashedLine.GetComponent<DashedLine>()._length = _length;
         DashedLine.GetComponent<DashedLine>()._space = _space;
         DashedLine.GetComponent<DashedLine>()._lineWidth = _lineWidth;
+        DashedLine.GetComponent<DashedLine>().startPoint = offset;
     }
 
     public override void Reflesh()

@@ -50,7 +50,10 @@ public class Launcher : MonoBehaviour
         for (int i = 0; i < syncronizedObjects.Length; i++)
             if (syncronizedObjects[i] != null)
                 synchronizeDataRefs.Add(syncronizedObjects[i].GetComponent<SynchronizeData>());
-        this.launchState = LaunchState.prepare;
+        launchState = LaunchState.prepare;
+
+        // ‚·‚×‚Ä‚Ì“¯Šúƒf[ƒ^‚ğ‰Šú‰»
+        foreach (var compRef in synchronizeDataRefs) compRef.Reflesh();
     }
 
     // Update is called once per frame
@@ -85,10 +88,9 @@ public class Launcher : MonoBehaviour
                 break;
         }
 
-        
+
         if (SynchronizeData.SetTime(time))
         {
-            Debug.Log("called ");
             foreach (var compRef in synchronizeDataRefs) compRef.Reflesh();
         }
     }
