@@ -19,23 +19,25 @@ public class Launcher : MonoBehaviour
 
     private List<SynchronizeData> synchronizeDataRefs;
 
-    private float _Time = 0;
+    private float _time = -10;
     public float time
     {
-        private set { _Time = value; }
-        get { return _Time; }
+        private set { _time = value; }
+        get { return _time; }
     }
     private float timeMax = 0;
     private float timeApogee = 0;
 
     public float timeRate = 1f; // ${timeRate}î{ë¨
 
-    private LaunchState _LaunchState;
+    private LaunchState _LaunchState = LaunchState.prepare;
     public LaunchState launchState
     {
         private set { _LaunchState = value; }
         get { return _LaunchState; }
     }
+
+    private bool isIngnite = false;
 
 
 
@@ -53,6 +55,7 @@ public class Launcher : MonoBehaviour
         launchState = LaunchState.prepare;
 
         // Ç∑Ç◊ÇƒÇÃìØä˙ÉfÅ[É^Çèâä˙âª
+        SynchronizeData.SetTime(time);
         foreach (var compRef in synchronizeDataRefs) compRef.Reflesh();
     }
 
@@ -65,12 +68,16 @@ public class Launcher : MonoBehaviour
         switch(_LaunchState)
         {
             case LaunchState.prepare:
+                Debug.Log("prepare");
                 time = -5;
                 if (Input.GetKeyDown(KeyCode.Return))
                     launchState = LaunchState.launch;
                 break;
             case LaunchState.launch:
-                time += Time.deltaTime * (time < 0 || time > timeApogee + 1 ? 1 : timeRate); // ë≈Çøè„Ç∞Ç©ÇÁí∏ì_1ïbå„Ç‹Ç≈ÇÕÇ‰Ç¡Ç≠ÇË
+                // time += Time.deltaTime * (time < 0 || time > timeApogee + 1 ? 1 : timeRate); // ë≈Çøè„Ç∞Ç©ÇÁí∏ì_1ïbå„Ç‹Ç≈ÇÕÇ‰Ç¡Ç≠ÇË
+                
+                time += Time.deltaTime * (time < 0 ? 1 : timeRate); // ë≈Çøè„Ç∞Ç©ÇÁí∏ì_1ïbå„Ç‹Ç≈ÇÕÇ‰Ç¡Ç≠ÇË
+
                 if (time > timeMax)
                     launchState = LaunchState.touchdown;
                 if (Input.GetKeyDown(KeyCode.Space)) 
@@ -88,10 +95,10 @@ public class Launcher : MonoBehaviour
                 break;
         }
 
-
         if (SynchronizeData.SetTime(time))
         {
             foreach (var compRef in synchronizeDataRefs) compRef.Reflesh();
         }
     }
+
 }

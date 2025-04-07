@@ -45,7 +45,7 @@ public class OpenFile : MonoBehaviour
 #else
         var dest_path = System.Environment.CurrentDirectory + "/temp";
         if (Directory.Exists(dest_path)) Directory.Delete(dest_path, true);
-        Directory.Delete(dest_path, true);
+        // Directory.Delete(dest_path, true);
         Directory.CreateDirectory(dest_path);
         Debug.Log(dest_path);
 

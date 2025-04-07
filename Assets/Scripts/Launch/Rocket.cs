@@ -13,6 +13,11 @@ public class Rocket : MonoBehaviour
     [SerializeField] private GameObject fin;
     [SerializeField] private Material finMaterial;
 
+    [SerializeField] private GameObject nozzle; 
+
+    private Nozzle nozzleBuff;
+
+
     private Vector3 nosePosition = Vector3.zero;
 
     private MeshRenderer meshRenderer;
@@ -49,6 +54,8 @@ public class Rocket : MonoBehaviour
         if (finMaterial != null )
             meshRenderer.material = finMaterial;
 
+        nozzleBuff = nozzle.GetComponent<Nozzle>();
+
     }
     void Update()
     {
@@ -61,6 +68,8 @@ public class Rocket : MonoBehaviour
             RotateComponets();
         }
     }
+
+
 
 
 
@@ -127,6 +136,14 @@ public class Rocket : MonoBehaviour
 
         fin.transform.transform.position = gameObject.transform.position;
         fin.transform.rotation = rotation;
+
+        nozzle.transform.transform.position = gameObject.transform.position - (rotation * nosePosition);
     }
 
+    public void SetThrust(float thrust)
+    {
+        nozzleBuff.thrust = thrust;
+    }
+
+    
 }
