@@ -18,7 +18,7 @@ public class NextScene : MonoBehaviour
         }
     }
 
-    // ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½ê‡
+    // ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸå ´åˆ
     public void onClick()
     {
         SceneManager.LoadScene("Launch");

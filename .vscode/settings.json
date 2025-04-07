@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "ScienceDay-main.sln"
+    "dotnet.defaultSolution": "ScienceDay.sln"
 }
