@@ -35,7 +35,7 @@ public class Rocket : MonoBehaviour
         }
         get { return _Zenith; }
     }
-    private float _Azimuth = 0; // •ûˆÊŠp (“Œ = x ‚ª0)
+    private float _Azimuth = 0; // æ–¹ä½è§’ (æ± = x ãŒ0)
     public float azimuth
     {
         set
@@ -60,7 +60,7 @@ public class Rocket : MonoBehaviour
     void Update()
     {
         var rocket = DataManager.Instance.rocket;
-        // ƒƒPƒbƒg‚Ì\‘¢ƒf[ƒ^‚ª•ÏX‚³‚ê‚½‚çÄ“xì¬
+        // ãƒ­ã‚±ãƒƒãƒˆã®æ§‹é€ ãƒ‡ãƒ¼ã‚¿ãŒå¤‰æ›´ã•ã‚ŒãŸã‚‰å†åº¦ä½œæˆ
         if (!_RocketStructureBuff.Equals(rocket))
         {
             _RocketStructureBuff = rocket;
@@ -75,47 +75,49 @@ public class Rocket : MonoBehaviour
 
     public void MakeRocket()
     {
-        var rocket = DataManager.Instance.rocket; // ƒƒPƒbƒg‚Ì\‘¢
+        var rocket = DataManager.Instance.rocket; // ãƒ­ã‚±ãƒƒãƒˆã®æ§‹é€ 
         gameObject.SetActive(true);
 
-        // ƒm[ƒY‚Ìƒ‚ƒfƒ‹‚Í‚‚³ 1 [m], ’ê–Ê’¼Œa 1 [m]. Œ´“_‚Í’ê–Ê’†S.
+        // ãƒãƒ¼ã‚ºã®ãƒ¢ãƒ‡ãƒ«ã¯é«˜ã• 1 [m], åº•é¢ç›´å¾„ 1 [m]. åŸç‚¹ã¯åº•é¢ä¸­å¿ƒ.
         nose.transform.localScale = new Vector3(rocket.bodyDiameter, rocket.noseLength, rocket.bodyDiameter);
-        nosePosition = new Vector3(0, rocket.bodyLength/2.0f, 0); // ƒ{ƒfƒB•ª‚¾‚¯ƒIƒtƒZƒbƒg. ƒ|ƒWƒVƒ‡ƒ“‚ÍRotateComponent“à•”‚Åw’è‚·‚é.
+        nosePosition = new Vector3(0, rocket.bodyLength/2.0f, 0); // ãƒœãƒ‡ã‚£åˆ†ã ã‘ã‚ªãƒ•ã‚»ãƒƒãƒˆ. ãƒã‚¸ã‚·ãƒ§ãƒ³ã¯RotateComponentå†…éƒ¨ã§æŒ‡å®šã™ã‚‹.
         nose.transform.SetParent(gameObject.transform);
 
-        // ƒ{ƒfƒB (‰~’Œ) ‚Í‚‚³‚ª 2 [m], ’¼Œa 1 [m]. ƒIƒuƒWƒFƒNƒgŒ´“_‚ğƒ[ƒJƒ‹Œ´“_‚É‘µ‚¦‚é.
+        // ãƒœãƒ‡ã‚£ (å††æŸ±) ã¯é«˜ã•ãŒ 2 [m], ç›´å¾„ 1 [m]. ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆåŸç‚¹ã‚’ãƒ­ãƒ¼ã‚«ãƒ«åŸç‚¹ã«æƒãˆã‚‹.
         body.transform.localScale = new Vector3(rocket.bodyDiameter, rocket.bodyLength / 2.0f, rocket.bodyDiameter);
         body.transform.SetParent(gameObject.transform);
 
-        // ƒtƒBƒ“
+        // ãƒ•ã‚£ãƒ³
         if (rocket.finPoints is null) return;
 
         var mesh = new Mesh();
 
-        var vertList = new List<Vector3> (); // ’¸“_ƒŠƒXƒg
+        var vertList = new List<Vector3> (); // é ‚ç‚¹ãƒªã‚¹ãƒˆ
         var idxList = new List<int>() ;
 
         var angle = 360 / rocket.finCount;
-        // “K“–‚ÈŠp“x‰ñ“]‚³‚¹‚é‚½‚ß‚ÌƒIƒtƒZƒbƒg (œ“ˆÓ“I)
+        // é©å½“ãªè§’åº¦å›è»¢ã•ã›ã‚‹ãŸã‚ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ (æ£æ„çš„)
         float angleOffset = 0;
-        if (rocket.finCount == 3) angleOffset = 180; // ‰æ–Ê‰Eè‚ÉƒtƒBƒ“‚ªŒ©‚¦‚½•û‚ª‚©‚Á‚±‚æ‚³‚°
-        else if (rocket.finCount == 4) angleOffset = 45; // ƒtƒBƒ“‚Í¶‰E‘ÎÌ‚Ì•û‚ª‚¢‚¢‚æ‚Ë
+        if (rocket.finCount == 3) angleOffset = 180; // ç”»é¢å³æ‰‹ã«ãƒ•ã‚£ãƒ³ãŒè¦‹ãˆãŸæ–¹ãŒã‹ã£ã“ã‚ˆã•ã’
+        else if (rocket.finCount == 4) angleOffset = 45; // ãƒ•ã‚£ãƒ³ã¯å·¦å³å¯¾ç§°ã®æ–¹ãŒã„ã„ã‚ˆã­
 
 
         for (int i = 0; i < rocket.finCount; i++)
         {
             var tempVerts = 
-                Array.ConvertAll(rocket.finPoints, vert => Quaternion.AngleAxis(i * angle + angleOffset, Vector3.up) * vert); // ’¸“_‚ğ‰ñ“]
+                Array.ConvertAll(rocket.finPoints, vert => Quaternion.AngleAxis(i * angle + angleOffset, Vector3.up) * vert); // é ‚ç‚¹ã‚’å›è»¢
 
-            /* TODO : ’¸“_•t‚¯‚ğH•v‚·‚é */
+            /* TODO : é ‚ç‚¹ä»˜ã‘ã‚’å·¥å¤«ã™ã‚‹ */
             vertList.AddRange(tempVerts);
-            var firstIdx = rocket.finPoints.Length * i; // tempVert‚Ìæ“ª‚Ì’¸“_‚ÌƒCƒ“ƒfƒbƒNƒX
+            var firstIdx = rocket.finPoints.Length * i; // tempVertã®å…ˆé ­ã®é ‚ç‚¹ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
             for (int j = 2; j < tempVerts.Length; j++)
             {
                 idxList.AddRange(new[] { firstIdx, firstIdx + j - 1, firstIdx + j });
-            } // ’¸“_ƒŠƒXƒg
+            } // é ‚ç‚¹ãƒªã‚¹ãƒˆ
 
         }
+
+        mesh.
 
 
         mesh.SetVertices(vertList);
@@ -124,7 +126,7 @@ public class Rocket : MonoBehaviour
     }
 
 
-    // Še•”‚ğ‰ñ“]‚³‚¹‚é
+    // å„éƒ¨ã‚’å›è»¢ã•ã›ã‚‹
     private void RotateComponets()
     {
         Quaternion rotation = Quaternion.AngleAxis(azimuth, Vector3.up) * Quaternion.AngleAxis(-90+zenith, Vector3.forward);

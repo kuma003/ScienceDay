@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-using SFB; //ƒ_ƒCƒAƒƒOo‚·—p
+using SFB; //ãƒ€ã‚¤ã‚¢ãƒ­ã‚°å‡ºã™ç”¨
 using System.IO;
 using UnityEditor;
 using System.Xml.Linq;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Net.Sockets;
 
 
-// ƒRƒsƒyŒ³
+// ã‚³ãƒ”ãƒšå…ƒ
 // https://qiita.com/Butterfly-Dream/items/fab63700439f6b88d932
 
 public class OpenFile : MonoBehaviour
@@ -20,26 +20,26 @@ public class OpenFile : MonoBehaviour
     [SerializeField] GameObject _ErrorPopup;
 
 
-    // ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½ê‡
+    // ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸå ´åˆ
     public void onClick() {
 
-        // ƒtƒBƒ‹ƒ^‚Í‚±‚±‚Å’Ç‰Á‘€ì‚·‚é
-        // new ExtensionFilter("•\¦–¼", "Šg’£q1", "Šg’£q2", ...)
+        // ãƒ•ã‚£ãƒ«ã‚¿ã¯ã“ã“ã§è¿½åŠ æ“ä½œã™ã‚‹
+        // new ExtensionFilter("è¡¨ç¤ºå", "æ‹¡å¼µå­1", "æ‹¡å¼µå­2", ...)
         var extensions = new[] {
-            new ExtensionFilter("OpenRocketƒtƒ@ƒCƒ‹", "ork"),
+            new ExtensionFilter("OpenRocketãƒ•ã‚¡ã‚¤ãƒ«", "ork"),
         };
 
-        // ƒ_ƒCƒAƒƒO‚ğ•\¦‚·‚é
-        // StandaloneFileBrowser.OpenFilePanel("ƒ^ƒCƒgƒ‹", "Å‰‚ÌƒfƒBƒŒƒNƒgƒŠêŠ", [ƒtƒBƒ‹ƒ^İ’è], [•¡”‘I‘ğ‰Â”\‚©‚Ç‚¤‚©(true or false)])
-        string[] path = StandaloneFileBrowser.OpenFilePanel("orkƒtƒ@ƒCƒ‹‚ğ‘I‘ğ", "", extensions, false);
+        // ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤ºã™ã‚‹
+        // StandaloneFileBrowser.OpenFilePanel("ã‚¿ã‚¤ãƒˆãƒ«", "æœ€åˆã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªå ´æ‰€", [ãƒ•ã‚£ãƒ«ã‚¿è¨­å®š], [è¤‡æ•°é¸æŠå¯èƒ½ã‹ã©ã†ã‹(true or false)])
+        string[] path = StandaloneFileBrowser.OpenFilePanel("orkãƒ•ã‚¡ã‚¤ãƒ«ã‚’é¸æŠ", "", extensions, false);
 
-        if (path.Length != 1 || path[0] == null) return; // “ü—Íƒtƒ@ƒCƒ‹‚ª•s³
+        if (path.Length != 1 || path[0] == null) return; // å…¥åŠ›ãƒ•ã‚¡ã‚¤ãƒ«ãŒä¸æ­£
 #if UNITY_EDITOR
-        // ƒRƒs[æ‚ÌˆêƒtƒHƒ‹ƒ_
+        // ã‚³ãƒ”ãƒ¼å…ˆã®ä¸€æ™‚ãƒ•ã‚©ãƒ«ãƒ€
         var dest_path = FileUtil.GetUniqueTempPathInProject();
         if (Directory.Exists(dest_path)) Directory.Delete(dest_path, true);
         Directory.CreateDirectory(dest_path);
-        // zipƒtƒ@ƒCƒ‹‚ÉŠg’£q•ÏXEL’£
+        // zipãƒ•ã‚¡ã‚¤ãƒ«ã«æ‹¡å¼µå­å¤‰æ›´ãƒ»ä¼¸å¼µ
         FileUtil.CopyFileOrDirectory(path[0], dest_path + "/rocket.zip");
         System.IO.Compression.ZipFile.ExtractToDirectory(dest_path + "/rocket.zip", dest_path);
 #else
@@ -54,19 +54,19 @@ public class OpenFile : MonoBehaviour
         System.IO.Compression.ZipFile.ExtractToDirectory(dest_path + "/rocket.zip", dest_path);
 #endif
 
-        // xmlƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+        // xmlãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿
         XDocument xml = XDocument.Load(dest_path + "/rocket.ork");
 
-        // xmlƒtƒ@ƒCƒ‹‰ğÍEƒf[ƒ^æ“¾
+        // xmlãƒ•ã‚¡ã‚¤ãƒ«è§£æãƒ»ãƒ‡ãƒ¼ã‚¿å–å¾—
         ReadXmlData(xml);
 
-        // ˆêƒtƒ@ƒCƒ‹‚ğ–Y‚ê‚¸‚Éíœ
+        // ä¸€æ™‚ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å¿˜ã‚Œãšã«å‰Šé™¤
         Directory.Delete(dest_path, true);
     }
 
     private void ReadXmlData(XDocument xmlOrkData)
     {
-            // ƒCƒjƒVƒƒƒ‰ƒCƒY
+            // ã‚¤ãƒ‹ã‚·ãƒ£ãƒ©ã‚¤ã‚º
             DataManager.Instance.trajectory = new FlightData() { time = new List<float>(), coord = new List<Vector3>(), vel = new List<float>(), zenith = new List<float>(), azimuth = new List<float>() };
             DataManager.Instance.events = new List<Event>();
             DataManager.Instance.profile = new Profile();
@@ -78,15 +78,15 @@ public class OpenFile : MonoBehaviour
             var condition = simulation.Element("conditions");
             var flightData = simulation.Element("flightdata");
 
-            // ”òsƒvƒƒtƒ@ƒCƒ‹æ“¾
+            // é£›è¡Œãƒ—ãƒ­ãƒ•ã‚¡ã‚¤ãƒ«å–å¾—
             DataManager.Instance.profile.rocket_name = rocket.Element("name").Value;
             DataManager.Instance.profile.flight_time = float.Parse(flightData.Attribute("flighttime").Value);
             DataManager.Instance.profile.apogee = float.Parse(flightData.Attribute("maxaltitude").Value);
             DataManager.Instance.profile.max_vel = float.Parse(flightData.Attribute("maxvelocity").Value);
-            DataManager.Instance.profile.angle = 90 - float.Parse(condition.Element("launchrodangle").Value); // …•½‚©‚ç‚ÌËŠp‚É•ÏŠ·
+            DataManager.Instance.profile.angle = 90 - float.Parse(condition.Element("launchrodangle").Value); // æ°´å¹³ã‹ã‚‰ã®å°„è§’ã«å¤‰æ›
             DataManager.Instance.profile.direction = float.Parse(condition.Element("launchroddirection").Value);
 
-            // ƒCƒxƒ“ƒgæ“¾
+            // ã‚¤ãƒ™ãƒ³ãƒˆå–å¾—
             var events = flightData.Element("databranch").Elements("event");
             DataManager.Instance.events = new List<Event>();
             foreach (var event_data in events)
@@ -96,16 +96,16 @@ public class OpenFile : MonoBehaviour
                 string name = event_data.Attribute("type").Value;
                 if (DataManager.Instance.events.Count > 0 &&
                     DataManager.Instance.events.Last().time == time)
-                    continue; // “¯‚¶‚Ìƒf[ƒ^‚Í”jŠü
+                    continue; // åŒã˜æ™‚åˆ»ã®ãƒ‡ãƒ¼ã‚¿ã¯ç ´æ£„
                 DataManager.Instance.events.Add(new Event() { time = time, name = name });
             }
 
-            // ”òsƒf[ƒ^æ“¾
+            // é£›è¡Œãƒ‡ãƒ¼ã‚¿å–å¾—
             var datapoint = flightData.Element("databranch").Elements("datapoint");
             DataManager.Instance.trajectory = new FlightData() { time = new List<float>(), coord = new List<Vector3>(), vel = new List<float>(), zenith = new List<float>(), azimuth = new List<float>() };
             for (int i = 0; i < datapoint.Count(); i++)
             {
-                var data = datapoint.ElementAt(i).Value.Split(","); // ƒf[ƒ^‚ÍcsvŒ`®‚È‚Ì‚Å , ‚Å•ªŠ„
+                var data = datapoint.ElementAt(i).Value.Split(","); // ãƒ‡ãƒ¼ã‚¿ã¯csvå½¢å¼ãªã®ã§ , ã§åˆ†å‰²
                 float time = float.Parse(data[0]);
                 var alt = float.Parse(data[1]);
                 var east = float.Parse(data[6]);
@@ -138,13 +138,13 @@ public class OpenFile : MonoBehaviour
                 DataManager.Instance.rocket.finType = "";
                 DataManager.Instance.rocket.finCount = 0;
                 var finPoints = new List<Vector3>();
-                // ƒTƒuƒRƒ“ƒ|[ƒlƒ“ƒg‚Í‚ ‚é‚©H (ƒtƒBƒ“.etc.)
-                if (stage.Element("bodytube").Elements("subcomponents").Count() == 0) return; // –³‚¯‚ê‚Î“Ç‚İæ‚è‚ğI—¹
+                // ã‚µãƒ–ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆã¯ã‚ã‚‹ã‹ï¼Ÿ (ãƒ•ã‚£ãƒ³.etc.)
+                if (stage.Element("bodytube").Elements("subcomponents").Count() == 0) return; // ç„¡ã‘ã‚Œã°èª­ã¿å–ã‚Šã‚’çµ‚äº†
 
                 var bodySubComponents = stage.Element("bodytube").Element("subcomponents");
                 float axialOffset = 0;
                 string offsetMethod = "";
-                ;                // ‘äŒ`ƒtƒBƒ“
+                ;                // å°å½¢ãƒ•ã‚£ãƒ³
                 if (bodySubComponents.Elements("trapezoidfinset").Count() > 0)
                 {
                     DataManager.Instance.rocket.finType = "trapezoidfinset";
@@ -169,7 +169,7 @@ public class OpenFile : MonoBehaviour
                 };
                     Debug.Log(finPoints);
                 }
-                // ‘È‰~Œ`ƒtƒBƒ“
+                // æ¥•å††å½¢ãƒ•ã‚£ãƒ³
                 else if (bodySubComponents.Elements("ellipticalfinset").Count() > 0)
                 {
                     DataManager.Instance.rocket.finType = "ellipticalfinset";
@@ -197,38 +197,38 @@ public class OpenFile : MonoBehaviour
                     {
                         finPoints.Add(new Vector3(
                             float.Parse(elm.Attribute("y").Value),
-                            -float.Parse(elm.Attribute("x").Value), // ƒIƒvƒƒP‚Æ‚Íˆá‚¢, ‹@ñ‘¤‚ğ³
+                            -float.Parse(elm.Attribute("x").Value), // ã‚ªãƒ—ãƒ­ã‚±ã¨ã¯é•ã„, æ©Ÿé¦–å´ã‚’æ­£
                             0));
                     }
                 }
 
-                if (finPoints.Count() < 3) return; // fin‚ª‚È‚¢‚È‚çI—¹
+                if (finPoints.Count() < 3) return; // finãŒãªã„ãªã‚‰çµ‚äº†
 
-                var _rootChord = Vector3.Distance(finPoints[0], finPoints.Last()); // ƒtƒBƒ“—ƒª’·
+                var _rootChord = Vector3.Distance(finPoints[0], finPoints.Last()); // ãƒ•ã‚£ãƒ³ç¿¼æ ¹é•·
                 switch (offsetMethod)
                 {
-                    case "absolute": // ‹@‘Ì’¸“_‚©‚ç
+                    case "absolute": // æ©Ÿä½“é ‚ç‚¹ã‹ã‚‰
                         axialOffset = -axialOffset + DataManager.Instance.rocket.noseLength + DataManager.Instance.rocket.bodyLength / 2.0f;
                         break;
-                    case "top": // e‚Ìã•”‚©‚ç
+                    case "top": // è¦ªã®ä¸Šéƒ¨ã‹ã‚‰
                         axialOffset = -axialOffset + DataManager.Instance.rocket.bodyLength / 2.0f;
                         break;
-                    case "middle": // e’†‰›‚©‚ç
+                    case "middle": // è¦ªä¸­å¤®ã‹ã‚‰
                         axialOffset = -axialOffset + _rootChord / 2.0f;
                         break;
 
-                    case "bottom": // e‚Ì’ê•”‚©‚ç
+                    case "bottom": // è¦ªã®åº•éƒ¨ã‹ã‚‰
                         axialOffset = -axialOffset - DataManager.Instance.rocket.bodyLength / 2.0f + _rootChord;
                         break;
-                    default: // middle‚à
+                    default: // middleã‚‚
                         axialOffset = -axialOffset; break;
                 }
                 
-                // ‹@²–@ü•ûŒü‚É”¼Œa•ª‚¾‚¯ƒIƒtƒZƒbƒg
+                // æ©Ÿè»¸æ³•ç·šæ–¹å‘ã«åŠå¾„åˆ†ã ã‘ã‚ªãƒ•ã‚»ãƒƒãƒˆ
                 Vector3 finOffset = new Vector3(DataManager.Instance.rocket.bodyDiameter / 2.0f, axialOffset, 0);
                 for (int i = 0; i < finPoints.Count(); i++) finPoints[i] += finOffset;
 
-                // —ƒ’[‚ğ‹@‘Ì‚É–„‚ß‚Ş‚½‚ß‚ÉL‚Î‚·
+                // ç¿¼ç«¯ã‚’æ©Ÿä½“ã«åŸ‹ã‚è¾¼ã‚€ãŸã‚ã«ä¼¸ã°ã™
                 finPoints.Insert(0, finPoints[0] - finOffset.x * Vector3.right);
                 finPoints.Add(finPoints.Last() - finOffset.x * Vector3.right);
 
@@ -237,14 +237,14 @@ public class OpenFile : MonoBehaviour
         
         }
 
-    // ‘È‰~Œ`ƒtƒBƒ“‚Ì’¸“_‚ğŒvZ‚·‚éŠÖ”.
-    // —ƒª‹@ñ‘¤‚ğŒ´“_‚Æ‚µ‚Ä y ²‚ğ‹@²‚É, ‹@‘Ì–@ü•ûŒü‚ğ x ²‚ÉÌ‚Á‚Ä‚¢‚é (’ê•”E“®Œa•ûŒü‚ğ‚»‚ê‚¼‚ê³‚Ì•ûŒü‚Æ‚·‚é).
+    // æ¥•å††å½¢ãƒ•ã‚£ãƒ³ã®é ‚ç‚¹ã‚’è¨ˆç®—ã™ã‚‹é–¢æ•°.
+    // ç¿¼æ ¹æ©Ÿé¦–å´ã‚’åŸç‚¹ã¨ã—ã¦ y è»¸ã‚’æ©Ÿè»¸ã«, æ©Ÿä½“æ³•ç·šæ–¹å‘ã‚’ x è»¸ã«æ¡ã£ã¦ã„ã‚‹ (åº•éƒ¨ãƒ»å‹•å¾„æ–¹å‘ã‚’ãã‚Œãã‚Œæ­£ã®æ–¹å‘ã¨ã™ã‚‹).
     private List<Vector3> CalculateEllipticalFinPoints(float tipChord, float height, int nPoints = 10)
     {
         List<Vector3> points = new List<Vector3>();
-        float a = tipChord / 2.0f; // ‘È‰~‚Ì•û’ö®‚Ìƒpƒ‰ƒƒ^
-        float b = height; // ‘È‰~‚Ì•û’ö®‚Ìƒpƒ‰ƒƒ^
-        float dx = 2 * a / (nPoints - 1); // x(‹@²)•ûŒü‚Ì‚İ•
+        float a = tipChord / 2.0f; // æ¥•å††ã®æ–¹ç¨‹å¼ã®ãƒ‘ãƒ©ãƒ¡ã‚¿
+        float b = height; // æ¥•å††ã®æ–¹ç¨‹å¼ã®ãƒ‘ãƒ©ãƒ¡ã‚¿
+        float dx = 2 * a / (nPoints - 1); // x(æ©Ÿè»¸)æ–¹å‘ã®åˆ»ã¿å¹…
         for (int i = 0; i < nPoints; i++)
         {
             points.Add(new Vector3(
