@@ -68,8 +68,7 @@ public class Launcher : MonoBehaviour
         switch(_LaunchState)
         {
             case LaunchState.prepare:
-                Debug.Log("prepare");
-                time = -5;
+                time = -5.0f;
                 if (Input.GetKeyDown(KeyCode.Return))
                     launchState = LaunchState.launch;
                 break;
